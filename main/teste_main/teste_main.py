@@ -8,6 +8,63 @@ import pandas as pd
 
 from hidroweb_downloader.download_from_api_BATCH import Hidroweb_BatchDownload
 
+
+
+#### MAIN FUNCTION TESTE ####
+@xw.func
+def main2():
+    wb = xw.Book.caller()
+    sheet = wb.sheets[0]
+
+    # Check connection
+    a = check_internetConection()
+    if a == 'Conectado':
+        xw.Range('A1').color = (0,255,0) # Green color
+    else:
+        xw.Range('A1').color = (255,0,0) # Red color
+    sheet['A1'].value = f'{a}'
+
+    # Find codes that fits the conditions
+    Estado = xw.Range('B3').value
+    Latitude = xw.Range('B4').value
+    Longitude = xw.Range('B5').value
+    Buffer = xw.Range('B6').value
+
+    AreaDrenagem_min = xw.Range('B7').value
+    AreaDrenagem_max = xw.Range('B8').value
+    Quantil = xw.Range('B9').value
+
+    data_input = {'Estado': xw.Range('B3'),
+                  'Latitude': xw.Range('B4'),
+                  'Longitude': xw.Range('B5'),
+                  'Buffer': xw.Range('B6'),
+                  'AreaDrenagem_min': xw.Range('B7'),
+                  'AreaDrenagem_max':xw.Range('B8'),
+                  'Quantil': xw.Range('B9')}
+
+    # Results location
+    results_range = xw.Range('B10')
+
+    # check_input()
+
+    # DEBUG  Temp location
+    hidrowebInventario_path = pathlib.Path(r'C:\Users\User\git\Excel-python\test\Hidroweb_Inventario\Inventario.csv')
+    inventario = pd.read_csv(hidrowebInventario_path)
+
+    inventario_df = inventario.loc[(inventario['nmEstado'].str.contains(Estado))&
+                                   (inventario['AreaDrenagem']>=AreaDrenagem_min)&
+                                   (inventario['AreaDrenagem']<=AreaDrenagem_max),
+                                   ['Codigo', 'AreaDrenagem']].reset_index(drop=True).copy()
+
+    print(inventario.columns)
+    print(inventario[['Latitude', 'Longitude']])
+
+    a = filter_inventario(inventario=inventario,
+                          data_input=data_input)
+
+    print(a)
+###########################
+
 @xw.func
 def main():
     wb = xw.Book.caller()
@@ -23,33 +80,47 @@ def main():
 
     # Find codes that fits the conditions
     Estado = xw.Range('B3').value
-    AreaDrenagem_min = xw.Range('B4').value
-    AreaDrenagem_max = xw.Range('B5').value
-    Quantil = xw.Range('B6').value
+    Latitude = xw.Range('B4').value
+    Longitude = xw.Range('B5').value
+    Buffer = xw.Range('B6').value
+
+    AreaDrenagem_min = xw.Range('B7').value
+    AreaDrenagem_max = xw.Range('B8').value
+    Quantil = xw.Range('B9').value
+
+    data_input = {'Estado': xw.Range('B3'),
+                  'Latitude': xw.Range('B4'),
+                  'Longitude': xw.Range('B5'),
+                  'Buffer': xw.Range('B6'),
+                  'AreaDrenagem_min': xw.Range('B7'),
+                  'AreaDrenagem_max':xw.Range('B8'),
+                  'Quantil': xw.Range('B9')}
 
     # Results location
-    results_range = xw.Range('B7')
+    results_range = xw.Range('B11')
 
-    check_input()
+    # check_input()
 
     # DEBUG  Temp location
     hidrowebInventario_path = pathlib.Path(r'C:\Users\User\git\Excel-python\test\Hidroweb_Inventario\Inventario.csv')
     inventario = pd.read_csv(hidrowebInventario_path)
+    ###
 
-    inventario_df = inventario.loc[(inventario['nmEstado'].str.contains(Estado))&
-                                   (inventario['AreaDrenagem']>=AreaDrenagem_min)&
-                                   (inventario['AreaDrenagem']<=AreaDrenagem_max),
-                                   ['Codigo', 'AreaDrenagem']].reset_index(drop=True).copy()
+    # inventario_df = inventario.loc[(inventario['nmEstado'].str.contains(Estado))&
+    #                                (inventario['AreaDrenagem']>=AreaDrenagem_min)&
+    #                                (inventario['AreaDrenagem']<=AreaDrenagem_max),
+    #                                ['Codigo', 'AreaDrenagem']].reset_index(drop=True).copy()
+
+    inventario_df = filter_inventario(inventario=inventario, data_input=data_input)
 
     print('Clearing')
-    end_range = xw.Range('D8').end('down')
-    xw.Range(xw.Range('B8'),end_range).clear()
+    end_range = xw.Range('D11').end('down')
+    xw.Range(results_range,end_range).clear()
     # results_range.expand('down').clear()
 
     print('Display all results')
     results_range.options(pd.DataFrame, index=False).value = inventario_df
-
-    xw.Range(xw.Range('B7'),end_range).color = None
+    xw.Range(results_range,end_range).color = None
 
     print('----- Initiate download -----')
     for i, row in inventario_df.iterrows():
@@ -108,12 +179,46 @@ def vazaoQuantil_Hidroweb(code, quantil, min_areaDrenagem, max_areaDrenagem):
     return False, 'Sem dados'
 
 
-def check_input():
-    if xw.Range('B3').value is None:
-        print('erro')
-        xw.Range('D3').color = (255,0,0)
+def check_input(input_data):
+    xw.Range('B3:B5').color = None
+    if (input_data['Latitude'].value is None) or (input_data['Longitude'].value is None) or (input_data['Buffer'].value is None):
+        print('Use only Estado!')
+        input_data['Estado'].color = (0,255,0)
+        input_data['Latitude'].color = (255,0,0)
+        input_data['Longitude'].color = (255,0,0)
+        input_data['Buffer'].color = (255,0,0)
+        return 'Estado'
     else:
-        xw.Range('D3').color = (0,255,0)
+        print('Use Lat, Lon and Buffer instead of Estado!!')
+        input_data['Estado'].color = (255,0,0)
+        input_data['Latitude'].color = (0,255,0)
+        input_data['Longitude'].color = (0,255,0)
+        input_data['Buffer'].color = (0,255,0)
+        return 'LatLon'
+
+
+
+def filter_inventario(inventario, data_input):
+    select_filter = check_input(input_data=data_input)
+    print(select_filter)
+    if select_filter == 'LatLon':
+        # Using Latitude, Longitude and a Buffer value
+        # Without use of Estado
+        inventario_filter = inventario.loc[(inventario['Latitude']<=data_input['Latitude'].value+data_input['Buffer'].value)&
+                                           (inventario['Latitude']>=data_input['Latitude'].value-data_input['Buffer'].value)&
+                                           (inventario['Longitude']<=data_input['Longitude'].value+data_input['Buffer'].value)&
+                                           (inventario['Longitude']>=data_input['Longitude'].value-data_input['Buffer'].value)&
+                                           (inventario['AreaDrenagem']>=data_input['AreaDrenagem_min'].value)&
+                                           (inventario['AreaDrenagem']<=data_input['AreaDrenagem_max'].value),
+                                           ['Codigo', 'AreaDrenagem']].reset_index(drop=True).copy()
+
+    elif select_filter == 'Estado':
+        inventario_filter = inventario.loc[(inventario['nmEstado'].str.contains(data_input['Estado'].value))&
+                                           (inventario['AreaDrenagem']>=data_input['AreaDrenagem_min'].value)&
+                                           (inventario['AreaDrenagem']<=data_input['AreaDrenagem_max'].value),
+                                           ['Codigo', 'AreaDrenagem']].reset_index(drop=True).copy()
+
+    return inventario_filter
 
 @xw.func
 def download_HidrowebStation(estado, min_areaDrenagem, max_areaDrenagem, codigo):
