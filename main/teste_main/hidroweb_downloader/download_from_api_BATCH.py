@@ -17,7 +17,6 @@ import calendar
 
 def download_ANA_stations(list_codes, typeData, folder_toDownload):
     numberOfcodes = len(list_codes)
-    count = 0
     path_folder = pathlib.Path(folder_toDownload)
     # floatProgress_loadingDownload.bar_style = 'info'
     dfs_download = []
@@ -78,13 +77,9 @@ def download_ANA_stations(list_codes, typeData, folder_toDownload):
             # else:
             #     pass
 
-            count += 1
-            # floatProgress_loadingDownload.value = float(count+1)/numberOfcodes
             dfs_download.append(df)
         else:
-            count += 1
-            # floatProgress_loadingDownload.value = float(count+1)/numberOfcodes
-
+            pass
     # try:
     #     dfs_merge_teste0 = reduce(lambda left,right: pd.merge(left, right, on=['Date'], how='outer'), dfs_download)
     #
@@ -108,7 +103,6 @@ class Hidroweb_BatchDownload:
 
     def download_ANA_stations(self, station, typeData, folder_toDownload):
         # numberOfcodes = len(list_codes)
-        count = 0
         # path_folder = pathlib.Path(folder_toDownload)
         path_folder = folder_toDownload
         # floatProgress_loadingDownload.bar_style = 'info'
@@ -172,15 +166,11 @@ class Hidroweb_BatchDownload:
             # else:
             #     pass
 
-            count += 1
-            # floatProgress_loadingDownload.value = float(count+1)/numberOfcodes
             # dfs_download.append(df)
             return True
         else:
-            count += 1
             return False
 
-                # floatProgress_loadingDownload.value = float(count+1)/numberOfcodes
 
 
 
