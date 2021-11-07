@@ -28,7 +28,7 @@ def main():
     Quantil = xw.Range('B6').value
 
     # Results location
-    results_range = xw.Range('B7') #
+    results_range = xw.Range('B7')
 
     check_input()
 
@@ -51,8 +51,7 @@ def main():
 
     xw.Range(xw.Range('B7'),end_range).color = None
 
-    print('Initiate download')
-
+    print('----- Initiate download -----')
     for i, row in inventario_df.iterrows():
         result_row = results_range.row + i + 1
         result_column = results_range.column + 1
@@ -71,11 +70,8 @@ def main():
             print('Fail download')
             xw.Range((result_row, result_column)).color = (255,0,0) # Red
 
-    # v = vazaoQuantil_Hidroweb(df=inventario_df,
-    #                           quantil=Quantil,
-    #                           min_areaDrenagem=AreaDrenagem_min,
-    #                           max_areaDrenagem=AreaDrenagem_max)
-
+    # Calculate Permanence curve
+    print('----- Calculate Permanence Curve -----')
     for i, row in inventario_df.iterrows():
         result_row = results_range.row + i + 1
         result_column = results_range.column + 2
@@ -88,11 +84,10 @@ def main():
         print(v)
 
         xw.Range((result_row, result_column)).value = v[1] # (Boolean, Vazao)
-
         if v[0]:
-            xw.Range((result_row, result_column)).color = (0, 255, 0)
+            xw.Range((result_row, result_column)).color = (0, 255, 0) # Green
         else:
-            xw.Range((result_row, result_column)).color = (255, 0, 0)
+            xw.Range((result_row, result_column)).color = (255, 0, 0) # Red
 
 def vazaoQuantil_Hidroweb(code, quantil, min_areaDrenagem, max_areaDrenagem):
     # Locate folder with downloaded data
