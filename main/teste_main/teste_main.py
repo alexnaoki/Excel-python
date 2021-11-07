@@ -8,7 +8,7 @@ import pandas as pd
 
 from hidroweb_downloader.download_from_api_BATCH import Hidroweb_BatchDownload
 
-
+# TODO Change xw.Range to sheet variable
 
 #### MAIN FUNCTION TESTE ####
 @xw.func
@@ -72,10 +72,6 @@ def main():
 
     # Check connection
     a = check_internetConection()
-    if a == 'Conectado':
-        xw.Range('A1').color = (0,255,0) # Green color
-    else:
-        xw.Range('A1').color = (255,0,0) # Red color
     sheet['A1'].value = f'{a}'
 
     # Find codes that fits the conditions
@@ -114,9 +110,9 @@ def main():
     inventario_df = filter_inventario(inventario=inventario, data_input=data_input)
 
     print('Clearing')
-    end_range = xw.Range('D11').end('down')
+    end_range = xw.Range('D12').end('down')
     xw.Range(results_range,end_range).clear()
-    # results_range.expand('down').clear()
+    xw.Range(results_range,end_range).color = None
 
     print('Display all results')
     results_range.options(pd.DataFrame, index=False).value = inventario_df
@@ -128,9 +124,9 @@ def main():
         result_column = results_range.column + 1
 
         print((result_row, result_column))
-        station_download = download_HidrowebStation(estado=Estado,
-                                                    min_areaDrenagem=AreaDrenagem_min,
-                                                    max_areaDrenagem=AreaDrenagem_max,
+        station_download = download_HidrowebStation(estado=data_input['Estado'].value,
+                                                    min_areaDrenagem=data_input['AreaDrenagem_min'].value,
+                                                    max_areaDrenagem=data_input['AreaDrenagem_max'].value,
                                                     codigo=row['Codigo'])
         print(station_download)
 
@@ -141,6 +137,8 @@ def main():
             print('Fail download')
             xw.Range((result_row, result_column)).color = (255,0,0) # Red
 
+    print('---- Completed download -----')
+
     # Calculate Permanence curve
     print('----- Calculate Permanence Curve -----')
     for i, row in inventario_df.iterrows():
@@ -149,9 +147,9 @@ def main():
         code = row['Codigo']
 
         v = vazaoQuantil_Hidroweb(code=code,
-                                  quantil=Quantil,
-                                  min_areaDrenagem=AreaDrenagem_min,
-                                  max_areaDrenagem=AreaDrenagem_max)
+                                  quantil=data_input['Quantil'].value,
+                                  min_areaDrenagem=data_input['AreaDrenagem_min'].value,
+                                  max_areaDrenagem=data_input['AreaDrenagem_max'].value)
         print(v)
 
         xw.Range((result_row, result_column)).value = v[1] # (Boolean, Vazao)
@@ -159,6 +157,8 @@ def main():
             xw.Range((result_row, result_column)).color = (0, 255, 0) # Green
         else:
             xw.Range((result_row, result_column)).color = (255, 0, 0) # Red
+
+    print('----- Completed calculation -----')
 
 def vazaoQuantil_Hidroweb(code, quantil, min_areaDrenagem, max_areaDrenagem):
     # Locate folder with downloaded data
@@ -195,8 +195,6 @@ def check_input(input_data):
         input_data['Longitude'].color = (0,255,0)
         input_data['Buffer'].color = (0,255,0)
         return 'LatLon'
-
-
 
 def filter_inventario(inventario, data_input):
     select_filter = check_input(input_data=data_input)
@@ -241,9 +239,11 @@ def check_internetConection(host="8.8.8.8", port=53, timeout=3):
     try:
         socket.setdefaulttimeout(timeout)
         socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+        xw.Range('A1').color = (0,255,0) # Gree color
         return 'Conectado'
     except socket.error as ex:
         print(ex)
+        xw.Range('A1').color = (255,0,0) # Red color
         return 'Desconectado'
 
 @xw.func
