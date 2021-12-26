@@ -8,7 +8,7 @@ backcall==0.2.0
 backports.functools-lru-cache @ file:///home/conda/feedstock_root/build_artifacts/backports.functools_lru_cache_1618230623929/work
 bleach @ file:///home/conda/feedstock_root/build_artifacts/bleach_1612213472466/work
 brotlipy==0.7.0
-certifi==2021.5.30
+certifi==2021.10.8
 cffi @ file:///D:/bld/cffi_1613414034267/work
 chardet @ file:///D:/bld/chardet_1610093644405/work
 colorama==0.4.3
