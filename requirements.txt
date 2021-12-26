@@ -13,7 +13,7 @@ cffi @ file:///D:/bld/cffi_1613414034267/work
 chardet @ file:///D:/bld/chardet_1610093644405/work
 colorama==0.4.3
 cryptography @ file:///D:/bld/cryptography_1616851687511/work
-cycler==0.10.0
+cycler==0.11.0
 decorator==4.4.2
 defusedxml @ file:///home/conda/feedstock_root/build_artifacts/defusedxml_1615232257335/work
 entrypoints @ file:///home/conda/feedstock_root/build_artifacts/entrypoints_1605121927639/work/dist/entrypoints-0.3-py2.py3-none-any.whl
