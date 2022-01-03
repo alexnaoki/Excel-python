@@ -66,7 +66,7 @@ prometheus-client @ file:///home/conda/feedstock_root/build_artifacts/prometheus
 prompt-toolkit==3.0.24
 protobuf==3.19.1
 pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1593275161868/work
-Pygments==2.7.1
+Pygments==2.11.1
 pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1608055815057/work
 pyparsing==2.4.7
 pyrsistent @ file:///D:/bld/pyrsistent_1610146997928/work
