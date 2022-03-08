@@ -26,7 +26,7 @@ ipython==7.18.1
 ipython-genutils==0.2.0
 ipywidgets @ file:///home/conda/feedstock_root/build_artifacts/ipywidgets_1609995587151/work
 jdcal==1.4.1
-jedi==0.17.2
+jedi==0.18.1
 Jinja2 @ file:///home/conda/feedstock_root/build_artifacts/jinja2_1621419064915/work
 json5 @ file:///home/conda/feedstock_root/build_artifacts/json5_1600692310011/work
 jsonschema @ file:///home/conda/feedstock_root/build_artifacts/jsonschema_1614815863336/work
