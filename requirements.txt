@@ -68,7 +68,7 @@ protobuf==3.19.1
 pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1593275161868/work
 Pygments==2.7.1
 pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1608055815057/work
-pyparsing==2.4.7
+pyparsing==3.0.8
 pyrsistent @ file:///D:/bld/pyrsistent_1610146997928/work
 PySocks @ file:///D:/bld/pysocks_1610291658292/work
 python-dateutil==2.8.1
