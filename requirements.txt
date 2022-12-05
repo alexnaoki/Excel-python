@@ -86,7 +86,7 @@ sympy==1.8
 terminado==0.9.4
 testpath @ file:///home/conda/feedstock_root/build_artifacts/testpath_1621261527237/work
 tornado==6.0.4
-traitlets==5.0.4
+traitlets==5.6.0
 typing-extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1602702424206/work
 urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1622056799390/work
 wcwidth==0.2.5
